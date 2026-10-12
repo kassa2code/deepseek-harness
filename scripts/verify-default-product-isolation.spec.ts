@@ -116,6 +116,29 @@ describe('default product isolation', () => {
     expect(verifyDefaultProductIsolation(root).failures.join('\n')).toContain(`optional bundle ${layer} must not be a default bundle`)
   })
 
+  it('ships a default-enabled official bundle that stays optional and Web-selected', () => {
+    const root = fixture()
+    const layer = '@deepseek-ai/dsh-market'
+    write(root, 'packages/market/dsh-market/package.json', {
+      name: layer, icon: './icon.svg', exports: { './locale/*.json': './locale/*.json' },
+      dependencies: { dshmarket: '^1.0.0' }, dsh: { bundle: { patch: './cordis.patch.yml' } },
+    })
+    write(root, 'packages/market/dsh-market/cordis.patch.yml', [{ insert: [{ name: 'dshmarket' }] }])
+    manifest(root, 'apps/cli/package.json', { dependencies: { [core]: 'workspace:^', [layer]: 'workspace:^' } })
+    const source = `export const PROFILE_TEMPLATES = { web: { bundles: ['${base}', '${layer}'] } }\n`
+      + `export const DEFAULT_PROFILE_BUNDLES = ['${base}']\n`
+      + `export const OPTIONAL_BUNDLES = ['${layer}']\n`
+    write(root, profile, source)
+    expect(verifyDefaultProductIsolation(root, new Set([layer])).failures).toEqual([])
+
+    // The exception stays narrow: an entry that is not both optional and Web-selected is rejected.
+    write(root, profile, `export const PROFILE_TEMPLATES = { web: { bundles: ['${base}'] } }\n`
+      + `export const DEFAULT_PROFILE_BUNDLES = ['${base}']\n`
+      + `export const OPTIONAL_BUNDLES = ['${layer}']\n`)
+    const failures = verifyDefaultProductIsolation(root, new Set([layer])).failures.join('\n')
+    expect(failures).toContain(`default-enabled official bundle ${layer} must be a default Web bundle`)
+  })
+
   it('requires each optional bundle to be a runtime dependency that declares a bundle patch, an icon, and locale metadata', () => {
     const root = fixture()
     write(root, profile, `export const PROFILE_TEMPLATES = { web: { bundles: ['${base}'] } }\n`

@@ -297,6 +297,9 @@
     - id: skill-filesystem
       name: '@deepseek-ai/dsh-skill-filesystem'
 
+    - id: skill-parenting
+      name: '@deepseek-ai/dsh-skill-parenting'
+
     - id: skill-badge
       name: '@deepseek-ai/dsh-skill-badge'
       disabled: true

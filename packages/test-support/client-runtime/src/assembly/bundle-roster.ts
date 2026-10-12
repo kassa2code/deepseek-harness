@@ -23,7 +23,11 @@ import { exactPackageSpecifier, parseDshClient } from '@deepseek-ai/dsh-client-m
 import * as yaml from 'js-yaml'
 import { ClientRoster, type ClientRosterRow } from './roster.ts'
 
-/** The `web` profile's bundle layers, in the order `dsh --profile web` applies them (app-boot `PROFILE_TEMPLATES.web`). */
+/**
+ * The first-party `web` profile bundle layers, in `dsh --profile web` apply order — a subset of
+ * app-boot `PROFILE_TEMPLATES.web` that omits the default-enabled third-party optional bundle
+ * `@deepseek-ai/dsh-market`, whose pre-built client this first-party roster reader does not compose.
+ */
 export const WEB_PROFILE_BUNDLES: readonly string[] = ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app']
 
 interface PackageManifest {

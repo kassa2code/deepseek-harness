@@ -1,0 +1,55 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/skill/skill-parenting/README.md
+/:
+  en: 664bb4bec88bfb86
+  zh: 2301eecd8844a18c
+/deepseek-ai-dsh-skill-parenting:
+  en: 064a8849341ecf27
+  zh: c8ccd79497b0159e
+/deepseek-ai-dsh-skill-parenting/summary:
+  en: c43b7f4c4e8b1be7
+  zh: 16c32b162dbe4600
+/deepseek-ai-dsh-skill-parenting/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/deepseek-ai-dsh-skill-parenting/use-this-package:
+  en: 09b0bb68121d6ec3
+  zh: 4a96274cf7d4dfc3
+/deepseek-ai-dsh-skill-parenting/use-this-package/when-to-choose-it:
+  en: dc50bb3d9a52a15a
+  zh: e17374ab26165b7b
+/deepseek-ai-dsh-skill-parenting/use-this-package/enable-the-plugin:
+  en: 48afdb78c06ef274
+  zh: 2ebb7ef4d45e5f4e
+/deepseek-ai-dsh-skill-parenting/use-this-package/what-the-parenting-skill-provides:
+  en: e919146948a4b11e
+  zh: 6d1155853fdb3cdf
+/deepseek-ai-dsh-skill-parenting/use-this-package/observable-success-and-failures:
+  en: 2035d0b07fa7714e
+  zh: d62ae0523bbf44d5
+/deepseek-ai-dsh-skill-parenting/understand-the-implementation:
+  en: 63465b0133f30e85
+  zh: 84bebb7c1fe0ceba
+/deepseek-ai-dsh-skill-parenting/understand-the-implementation/design-concept:
+  en: 21a539c9a6cb8f9c
+  zh: c1a36c0e904a366c
+/deepseek-ai-dsh-skill-parenting/understand-the-implementation/source-map:
+  en: b883c2c88d595269
+  zh: 19c1473d7ba3faac
+/deepseek-ai-dsh-skill-parenting/further-exploration:
+  en: be297a94a0ff26bc
+  zh: 2fbd5c2c1b3c8827
+/deepseek-ai-dsh-skill-parenting/model-experience:
+  en: b9912bc3f1ba0680
+  zh: e288cc67b6d079f6
+/deepseek-ai-dsh-skill-parenting/model-experience/kv-cache-effect:
+  en: ff0edf5838756335
+  zh: 1de00b53916c8f21
+/deepseek-ai-dsh-skill-parenting/known-limitations-and-deferred-work:
+  en: b3faa7ae9d29365d
+  zh: 07e0fdbe318a1c08
+/deepseek-ai-dsh-skill-parenting/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98
