@@ -18,6 +18,9 @@ overrides:
   'extract-zip>yauzl': '3.4.0'
   '@deepseek-ai/cosmokit': 'link:vendor/cosmokit'
   '@deepseek-ai/schemastery': 'link:vendor/schemastery'
+  # Local mirror: cdn.sheetjs.com is unreachable here, so the pinned xlsx
+  # tarball resolves from a gitignored local copy instead of the network.
+  xlsx: 'file:.artifacts/xlsx/xlsx-0.20.3.tgz'
 
 peerDependencyRules:
   allowedVersions:
