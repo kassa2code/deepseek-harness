@@ -181,7 +181,7 @@ export const PROFILE_TEMPLATES: Record<string, ProfileTemplate> = {
     bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-acp-app'],
   },
   web: {
-    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-market'],
+    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app'],
   },
   headless: {
     bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-headless'],
@@ -213,11 +213,10 @@ const RETIRED_BUNDLES: ReadonlySet<string> = new Set([
 export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@deepseek-ai/dsh-base']
 
 /**
- * The bundles the dsh installation ships for a person to switch on or off: each a
+ * The bundles the dsh installation ships for a person to switch on: each a
  * runtime dependency of the installation that declares `dsh.bundle.patch`,
- * an `icon`, and `./locale/*.json` display metadata, and the plugin manager lists
- * in its Official group. Each ships switched off and selected by no template,
- * except a `DEFAULT_ENABLED_OFFICIAL_BUNDLES` member the Web template selects
+ * an `icon`, and `./locale/*.json` display metadata, selected by no shipped
+ * template, and offered switched off by the plugin manager
  * ([rationale](../../../../.agents/notes/implemented/process/2026-09-15-shipped-optional-bundles.md),
  * [admission](../../../../.agents/notes/implemented/architecture/2026-09-21-experimental-capabilities-as-optional-bundles.md)).
  */
@@ -226,19 +225,7 @@ export const OPTIONAL_BUNDLES: readonly string[] = [
   '@deepseek-ai/dsh-experimental-voice-input-bundle',
   '@deepseek-ai/dsh-experimental-auto-review',
   '@deepseek-ai/dsh-experimental-inspector-profile',
-  '@deepseek-ai/dsh-market',
 ]
-
-/**
- * Official bundles a shipped template selects by default while the plugin manager keeps listing
- * them in its Official group, because they are optional bundles (`OPTIONAL_BUNDLES`) that are
- * enabled rather than installed: a person switches one off without uninstalling a product
- * dependency. Each member must appear in both `OPTIONAL_BUNDLES` and a `PROFILE_TEMPLATES` bundle
- * list; every other optional bundle ships switched off and is selected by no template.
- */
-export const DEFAULT_ENABLED_OFFICIAL_BUNDLES: ReadonlySet<string> = new Set([
-  '@deepseek-ai/dsh-market',
-])
 
 const PROFILE_PATCH_TEMPLATE = `# Your patch layer for this dsh profile, applied after every bundle layer:
 # a top-level YAML array of loader patch entries (id-targeted config

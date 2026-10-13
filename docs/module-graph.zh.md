@@ -319,9 +319,6 @@ flowchart TD
     pkg_lsp_stdio["lsp-stdio"]
     pkg_tool_lsp["tool-lsp"]
   end
-  subgraph group_market["packages/market"]
-    pkg_market["market"]
-  end
   subgraph group_mcp["packages/mcp"]
     pkg_mcp_client["mcp-client"]
     pkg_mcp_resources["mcp-resources"]
@@ -1485,7 +1482,6 @@ flowchart TD
 | [`host-directory-picker-native`](../packages/host/directory-picker-native) | `host` | — |
 | [`host-open-in-app`](../packages/host/open-in-app) | `host` | — |
 | [`host-webserver`](../packages/host/webserver) | `host` | — |
-| [`market`](../packages/market/dsh-market) | `market` | — |
 | [`session-format`](../packages/session/session-format) | `session` | — |
 | [`session-format-v0-to-v1`](../packages/session/session-format-v0-to-v1) | `session` | — |
 | [`session-format-v1-to-v2`](../packages/session/session-format-v1-to-v2) | `session` | — |

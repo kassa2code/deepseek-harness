@@ -30,6 +30,7 @@ it('omits development artifacts while preserving executable modules, assets and 
     '@deepseek-ai/libreoffice-kit-wasm/assets/soffice.data',
     '@deepseek-ai/libreoffice-kit-darwin-arm64/bin/libreoffice-kit',
     '.modules.yaml', '.pnpm-workspace-state-v1.json', '.bin/tool', '.pnpm/cache',
+    'example/.gitkeep', 'node-pty/prebuilds/win32-x64/.gitkeep',
   ]
   const retained = [
     'example/index.js', 'example/index.cjs', 'example/index.mjs', 'example/worker.js',
@@ -49,6 +50,7 @@ it('omits development artifacts while preserving executable modules, assets and 
     '@deepseek-ai/libreoffice-kit-win32-x64/bin/libreoffice-kit.exe',
     '@deepseek-ai/libreoffice-kit-win32-x64/sources/core-source.json',
     '@deepseek-ai/libreoffice-kit-win32-x64/licenses/MPL-2.0.txt',
+    'example/.keep',
   ]
   try {
     const runtime = runtimeFixture(source)

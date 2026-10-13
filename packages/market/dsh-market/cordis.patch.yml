@@ -1,7 +1,0 @@
-# dsh-market preset layer: inserts the dshmarket plugin market into the Web
-# profile. Applied after dsh-web-app so the settings slots it injects exist.
-# The row is enabled (never disabled) because this bundle ships on by default.
-- insert:
-    - id: dsh-market
-      name: 'dshmarket'
-      disabled: false

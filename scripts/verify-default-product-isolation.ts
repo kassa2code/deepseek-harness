@@ -1,9 +1,7 @@
 /**
  * Keep experimental packages outside default installations, runtime imports, and shipped compositions.
  * The one declared exception is a bundle the launcher names in `OPTIONAL_BUNDLES`: shipped for the person to
- * switch on, selected by no shipped template, its own dependency graph outside the default product's. A bundle
- * named in `DEFAULT_ENABLED_OFFICIAL_BUNDLES` is the narrow exception to "selected by no shipped template": an
- * official bundle the Web template selects by default yet the plugin manager still lists in its Official group.
+ * switch on, selected by no shipped template, its own dependency graph outside the default product's.
  */
 
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs'
@@ -14,7 +12,7 @@ import ts from 'typescript'
 import { applyEntryPatches, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import { loadOverlayPatches } from '../packages/boot/app-boot/src/index.ts'
-import { bundlePatchPaths, composeEntries, DEFAULT_ENABLED_OFFICIAL_BUNDLES } from '../packages/boot/app-boot/src/profile.ts'
+import { bundlePatchPaths, composeEntries } from '../packages/boot/app-boot/src/profile.ts'
 import type { DshBundleManifest } from '../packages/util/package-manifest/src/types.ts'
 import { isAgentPresetEntry, isCordisGroupEntry, loadCordisYaml } from './cordis-yaml.ts'
 import {
@@ -58,13 +56,9 @@ export interface ProductIsolationResult {
  * Check default app installations and their authored runtime/configuration inputs.
  * Experimental opt-in packages and separate Web preview entries are outside these roots.
  * @param root - repository root; no build outputs or installed workspace links are read.
- * @param defaultEnabledOfficialBundles - optional bundles a shipped template also selects by default.
  * @returns violations and the sizes of the checked package, source, and configuration sets.
  */
-export function verifyDefaultProductIsolation(
-  root: string,
-  defaultEnabledOfficialBundles: ReadonlySet<string> = DEFAULT_ENABLED_OFFICIAL_BUNDLES,
-): ProductIsolationResult {
+export function verifyDefaultProductIsolation(root: string): ProductIsolationResult {
   const failures: string[] = []
   const packages = new Map<string, Package>()
   const directories = new Map<string, Package>()
@@ -252,21 +246,7 @@ export function verifyDefaultProductIsolation(
       if (packages.get(name)?.manifest.dsh?.bundle?.patch === undefined) {
         failures.push(`${PROFILE_SOURCE}: default bundle ${name} must declare dsh.bundle.patch`)
       }
-      if (optionalBundles.has(name) && !defaultEnabledOfficialBundles.has(name)) {
-        failures.push(`${PROFILE_SOURCE}: optional bundle ${name} must not be a default bundle`)
-      }
-    }
-    // The narrow exception must stay narrow: a default-enabled official bundle is an optional bundle the Web
-    // template selects, so it reads as Official in the plugin manager yet loads on a stock launch. Only a bundle
-    // the profile source actually names is checked; a synthetic profile modeling none exercises the relaxation alone.
-    for (const name of defaultEnabledOfficialBundles) {
-      if (!optionalBundles.has(name) && !selection.webBundles.includes(name) && !selection.packages.includes(name)) continue
-      if (!optionalBundles.has(name)) {
-        failures.push(`${PROFILE_SOURCE}: default-enabled official bundle ${name} must be an optional bundle`)
-      }
-      if (!selection.webBundles.includes(name)) {
-        failures.push(`${PROFILE_SOURCE}: default-enabled official bundle ${name} must be a default Web bundle`)
-      }
+      if (optionalBundles.has(name)) failures.push(`${PROFILE_SOURCE}: optional bundle ${name} must not be a default bundle`)
     }
     const webLayers = selection.webBundles.flatMap((name) => {
       const pkg = packages.get(name)

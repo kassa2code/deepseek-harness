@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如何新增系统预设 Skill · DeepSeek Harness</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #1f2328;
+    --muted: #57606a;
+    --line: #d8dee4;
+    --brand: #2f6feb;
+    --brand-soft: #eaf1fe;
+    --code-bg: #f0f2f5;
+    --ok: #1a7f37;
+    --warn: #9a6700;
+    --warn-bg: #fff8c5;
+    --danger: #cf222e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 96px; }
+  header.hero {
+    background: linear-gradient(135deg, #2f6feb 0%, #1b4bb8 100%);
+    color: #fff; border-radius: 14px; padding: 32px 34px; margin-bottom: 28px;
+    box-shadow: 0 6px 24px rgba(31,75,184,.18);
+  }
+  header.hero h1 { margin: 0 0 8px; font-size: 27px; }
+  header.hero p { margin: 0; opacity: .92; font-size: 15px; }
+  header.hero .meta { margin-top: 16px; font-size: 13px; opacity: .85; }
+  h2 {
+    font-size: 21px; margin: 40px 0 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--line);
+  }
+  h3 { font-size: 17px; margin: 26px 0 10px; color: #24303f; }
+  h4 { font-size: 15px; margin: 18px 0 8px; color: var(--muted); }
+  p { margin: 10px 0; }
+  code {
+    background: var(--code-bg); padding: 1.5px 6px; border-radius: 5px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 13px;
+  }
+  pre {
+    background: #0d1117; color: #e6edf3; padding: 16px 18px; border-radius: 10px;
+    overflow-x: auto; font-size: 13px; line-height: 1.55;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 4px 24px 20px; margin: 16px 0; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .note, .warn, .tip {
+    border-radius: 10px; padding: 12px 16px; margin: 16px 0; font-size: 14px;
+    border-left: 4px solid;
+  }
+  .note { background: var(--brand-soft); border-color: var(--brand); }
+  .warn { background: var(--warn-bg); border-color: var(--warn); }
+  .tip  { background: #eaf6ec; border-color: var(--ok); }
+  .note b, .warn b, .tip b { display: inline-block; margin-bottom: 2px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #f0f3f7; font-weight: 600; }
+  td code { white-space: nowrap; }
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+  ol.steps > li {
+    counter-increment: step; position: relative; padding: 0 0 4px 0; margin: 0;
+  }
+  .step-head {
+    display: flex; align-items: center; gap: 12px; margin: 28px 0 6px;
+  }
+  .step-num {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--brand); color: #fff; font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-head h3 { margin: 0; }
+  .filetag {
+    display: inline-block; background: #eef1f4; border: 1px solid var(--line);
+    border-radius: 6px; padding: 1px 8px; font-size: 12px; color: var(--muted);
+    font-family: "SFMono-Regular", Consolas, monospace; margin: 2px 4px 2px 0;
+  }
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { padding: 6px 0 6px 30px; position: relative; border-bottom: 1px dashed var(--line); }
+  .checklist li:before {
+    content: "☐"; position: absolute; left: 4px; top: 5px; font-size: 17px; color: var(--brand);
+  }
+  .toc { columns: 2; column-gap: 32px; font-size: 14px; }
+  .toc a { color: var(--brand); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  a { color: var(--brand); }
+  .kbd { background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 7px;font-size:12px;font-family:monospace; }
+  .small { font-size: 13px; color: var(--muted); }
+  .tree { background:#0d1117;color:#7ee787;padding:16px 18px;border-radius:10px;font-family:monospace;font-size:13px;white-space:pre;overflow-x:auto;line-height:1.5; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>如何新增系统预设 Skill</h1>
+  <p>基于 <code style="background:rgba(255,255,255,.2);color:#fff">skill-parenting</code>（育儿大师）实践，逐步指导你在 DeepSeek Harness 中新增一个开箱即用、默认启用的系统预设技能。</p>
+  <div class="meta">参考提交：<code style="background:rgba(255,255,255,.2);color:#fff">aabba732c3</code> · feat: add default-enabled parenting skill &nbsp;|&nbsp; 对比基线：<code style="background:rgba(255,255,255,.2);color:#fff">master (5badb15009)</code></div>
+</header>
+
+<div class="card">
+  <h3 style="margin-top:16px">目录</h3>
+  <div class="toc">
+    <a href="#concept">1. 概念：什么是系统预设 Skill</a><br>
+    <a href="#arch">2. 架构与核心契约</a><br>
+    <a href="#overview">3. 改动全景（一图看懂）</a><br>
+    <a href="#steps">4. 分步实现指南</a><br>
+    <a href="#gates">5. 质量闸门与验证</a><br>
+    <a href="#checklist">6. 完整检查清单</a><br>
+    <a href="#pitfalls">7. 常见坑与注意事项</a><br>
+    <a href="#ref">8. 契约速查表</a>
+  </div>
+</div>
+
+<!-- ============ 1. 概念 ============ -->
+<h2 id="concept">1. 概念：什么是系统预设 Skill</h2>
+<p>在 DeepSeek Harness 中，「系统预设 Skill」= 一个 <b>bundled（内置）技能提供者包</b>。它把一份固定的 Markdown 指令（技能正文）连同路由描述打包成一个 Cordis 插件，随产品一同发布，安装后即可被模型或用户直接使用，无需用户在本地技能目录里放置任何文件。</p>
+
+<p>它有两种调用面（由 <code>invocation</code> 控制）：</p>
+<table>
+  <tr><th>调用面</th><th>字段</th><th>效果</th></tr>
+  <tr><td>模型可调用</td><td><code>modelInvocable: true</code></td><td>当用户请求命中技能描述时，模型会自动加载技能正文并遵循它作答。</td></tr>
+  <tr><td>用户可调用</td><td><code>userInvocable: true</code></td><td>用户可以在 <span class="kbd">/</span> 技能选择器里直接手动选中它。</td></tr>
+</table>
+
+<p>与之对照的还有另外两类技能来源：<code>skill-filesystem</code>（读取本地目录里的用户技能）和 <code>runtime</code>（运行时注册）。本文只讲<b>系统预设</b>这一类——即随包发布、<code>source: 'bundled'</code> 的提供者。</p>
+
+<div class="note">
+  <b>现成范例</b>：仓库里已有三个同类包可作模板对照——
+  <code>packages/skill/skill-badge</code>（带图片资源）、
+  <code>packages/skill/skill-office</code>、
+  <code>packages/skill/skill-parenting</code>（最精简、纯文本正文，<b>推荐作为起点</b>）。
+</div>
+
+<!-- ============ 2. 架构 ============ -->
+<h2 id="arch">2. 架构与核心契约</h2>
+
+<p>技能系统是一个 <b>能力接缝（capability seam）</b>，三个角色：</p>
+<table>
+  <tr><th>角色</th><th>包</th><th>职责</th></tr>
+  <tr><td>Service Definition（注册表）</td><td><code>packages/skill/skill</code></td><td>提供 <code>ctx.skills</code>，合并所有提供者的技能目录，处理重名去重（按 <code>rank</code>）。</td></tr>
+  <tr><td>Service Provider（提供者）</td><td><code>skill-badge</code> / <code>skill-office</code> / <code>skill-filesystem</code> / <b>你的新包</b></td><td>实现 <code>SkillProvider</code>，向 <code>ctx.skills.registerProvider()</code> 注册。</td></tr>
+  <tr><td>Consumer（消费者）</td><td><code>packages/skill/tool-skill</code></td><td>把技能目录和加载到的正文渲染给模型。</td></tr>
+</table>
+
+<h3>2.1 你要实现的接口</h3>
+<p>新包只需实现 <code>SkillProvider</code>（来自 <code>@deepseek-ai/dsh-skill</code>）：</p>
+<pre><code>interface SkillProvider {
+  readonly name: string                       // 注册表内唯一的提供者名，如 'dsh-parenting'
+  readonly list: (options) =&gt; Promise&lt;readonly SkillCandidate[] | SkillProviderObservation&gt;
+  readonly get:  (candidate, options) =&gt; Promise&lt;SkillDefinition | undefined&gt;
+}</code></pre>
+
+<h3>2.2 关键类型</h3>
+<table>
+  <tr><th>类型 / 常量</th><th>说明</th></tr>
+  <tr><td><code>BUNDLED_SKILL_RANK</code></td><td>常量 = <b>600</b>。内置提供者的标准优先级；重名技能 rank 低者胜出。</td></tr>
+  <tr><td><code>SkillCandidate</code></td><td><code>list()</code> 返回的目录项：<code>name</code> / <code>description</code> / <code>invocation</code> / <code>provider</code> / <code>source</code> / <code>rank</code> / <code>locator</code>（+ 可选 <code>resourceBase</code> / <code>metadata</code>）。</td></tr>
+  <tr><td><code>SkillDefinition</code></td><td><code>get()</code> 返回的完整定义 = Candidate 去掉 rank/locator，加上 <code>content</code>（Markdown 正文）。</td></tr>
+  <tr><td><code>SkillSource</code></td><td>预设技能固定为 <code>'bundled'</code>。</td></tr>
+  <tr><td><code>SkillInvocationPolicy</code></td><td><code>{ modelInvocable, userInvocable }</code>。</td></tr>
+</table>
+
+<div class="tip">
+  <b>命名规则</b>：技能 <code>name</code> 必须是 kebab-case，正则 <code>/^[a-z0-9]+(?:-[a-z0-9]+)*$/</code>（如 <code>parenting-master</code>）。不合规会被注册表拒绝。
+</div>
+
+<!-- ============ 3. 全景 ============ -->
+<h2 id="overview">3. 改动全景（一图看懂）</h2>
+<p>新增一个预设 Skill 会触及三类文件：<b>①新包本身</b>、<b>②装配接线</b>、<b>③闸门脚本与文档</b>。下表是 <code>skill-parenting</code> 提交的完整改动映射（已剔除与 dsh-market 相关的行）：</p>
+
+<table>
+  <tr><th>类别</th><th>文件</th><th>改动内容</th></tr>
+  <tr><td rowspan="7">① 新包<br><span class="small">packages/skill/skill-&lt;name&gt;/</span></td>
+      <td><code>package.json</code></td><td>包清单：name、exports、files、peer/dev 依赖</td></tr>
+  <tr><td><code>src/index.ts</code></td><td>插件入口 + 提供者实现</td></tr>
+  <tr><td><code>assets/&lt;skill&gt;.md</code></td><td>技能正文 Markdown</td></tr>
+  <tr><td><code>tests/skill-&lt;name&gt;.spec.ts</code></td><td>注册/加载/卸载单测</td></tr>
+  <tr><td><code>tsconfig.json</code></td><td>编译单元 + project references</td></tr>
+  <tr><td><code>README.md</code> / <code>README.zh.md</code></td><td>双语包说明</td></tr>
+  <tr><td><code>README.i18n.yaml</code></td><td>双语配对一致性记录（生成）</td></tr>
+
+  <tr><td rowspan="2">② 装配接线</td>
+      <td><code>packages/bundle/base/cordis.patch.yml</code></td><td>新增 <code>skill-&lt;name&gt;</code> 组合行（默认启用）</td></tr>
+  <tr><td><code>packages/bundle/base/package.json</code></td><td>dependencies 新增 <code>@deepseek-ai/dsh-skill-&lt;name&gt;: workspace:*</code></td></tr>
+
+  <tr><td rowspan="6">③ 闸门 / 工程登记</td>
+      <td><code>tsconfig.base.json</code></td><td>paths 增加包名 → src 映射</td></tr>
+  <tr><td><code>tsconfig.host.json</code></td><td>references 增加 project 条目</td></tr>
+  <tr><td><code>scripts/check-workspace-constraints.ts</code></td><td><code>packageFileExtras</code> 声明 <code>assets</code> 为合法额外产物</td></tr>
+  <tr><td><code>scripts/gen-doc-graphs.ts</code></td><td>把新包加入 skill seam 的 <code>implementations</code></td></tr>
+  <tr><td><code>scripts/verify-package-readme-model-experience.ts</code></td><td>登记 README 的 Model Experience 契约（<code>indirect</code>）</td></tr>
+  <tr><td><code>scripts/build-exe-for-python-sdk.ts</code></td><td>ASSET_GLOBS 增加 <code>assets/**/*</code>（Python SDK exe 打包）</td></tr>
+
+  <tr><td rowspan="3">④ 生成 / 锁</td>
+      <td><code>pnpm-lock.yaml</code></td><td><code>pnpm install</code> 自动更新（workspace glob 已覆盖，无需手改 pnpm-workspace.yaml）</td></tr>
+  <tr><td><code>docs/module-graph.md</code> / <code>.zh.md</code></td><td>运行文档生成器自动重写</td></tr>
+  <tr><td><code>docs/capability-seams.md</code> / <code>.zh.md</code></td><td>同上，自动重写</td></tr>
+</table>
+
+<div class="note">
+  <b>好消息</b>：<code>pnpm-workspace.yaml</code> 用 glob <code>packages/*/*</code> 匹配，新包放在 <code>packages/skill/</code> 下会被<b>自动纳入工作区</b>，无需手动登记。（skill-parenting 提交里对该文件的改动是给 dsh-market 的外部依赖加白名单，与技能无关。）
+</div>
+
+<!-- ============ 4. 步骤 ============ -->
+<h2 id="steps">4. 分步实现指南</h2>
+<p>下面以新增一个名为 <code>skill-foo</code>、技能名 <code>foo-master</code> 的假想技能为例，逐步演示。<b>把 <code>foo</code> 换成你的技能标识即可。</b></p>
+
+<ol class="steps">
+
+<!-- STEP 1 -->
+<li>
+<div class="step-head"><span class="step-num">1</span><h3>创建包目录结构</h3></div>
+<p>在 <code>packages/skill/</code> 下新建 <code>skill-foo/</code>，最终结构如下：</p>
+<div class="tree">packages/skill/skill-foo/
+├── assets/
+│   └── foo-master.md        # 技能正文（Markdown）
+├── src/
+│   └── index.ts             # 插件入口 + 提供者
+├── tests/
+│   └── skill-foo.spec.ts    # 单元测试
+├── package.json
+├── tsconfig.json
+├── README.md
+├── README.zh.md
+└── README.i18n.yaml         # 由生成器写入</div>
+</li>
+
+<!-- STEP 2 -->
+<li>
+<div class="step-head"><span class="step-num">2</span><h3>编写技能正文</h3></div>
+<span class="filetag">assets/foo-master.md</span>
+<p>这是模型加载技能后真正遵循的指令正文。用 Markdown 写清「身份定位、输出结构、能力边界」等。它通过 <code>import.meta.url</code> 相对路径读取，因此<b>必须放在 <code>assets/</code> 且随包发布</b>。</p>
+<pre><code>#  foo 大师
+
+## 1. 身份与定位
+你是……（角色、立场、覆盖范围、能力边界）
+
+## 2. 输出结构
+| 板块 | 要求 |
+|---|---|
+| … | … |</code></pre>
+<div class="tip"><b>参考</b>：<code>packages/skill/skill-parenting/assets/parenting-master.md</code> 是一份结构完整的范例（身份/边界三段式/输出结构表格）。</div>
+</li>
+
+<!-- STEP 3 -->
+<li>
+<div class="step-head"><span class="step-num">3</span><h3>实现插件入口与提供者</h3></div>
+<span class="filetag">src/index.ts</span>
+<p>这是核心文件。它导出 Cordis 插件三要素 <code>name</code> / <code>inject</code> / <code>apply</code>，并在 <code>apply</code> 里把一个不可变的 <code>SkillProvider</code> 注册到 <code>ctx.skills</code>。</p>
+<pre><code>/**
+ * Bundled `foo-master` skill provider.
+ *
+ * @module @deepseek-ai/dsh-skill-foo
+ */
+
+import { readFile } from 'node:fs/promises'
+import type { Context } from '@deepseek-ai/cordis'
+import {
+  BUNDLED_SKILL_RANK,
+  type SkillCandidate,
+  type SkillDefinition,
+  type SkillProvider,
+} from '@deepseek-ai/dsh-skill'
+
+const PROVIDER_NAME = 'dsh-foo'
+const SKILL_BODY_URL = new URL('../assets/foo-master.md', import.meta.url)
+const INVOCATION = { modelInvocable: true, userInvocable: true } as const
+
+// 这段描述同时驱动「模型自动路由」和「/ 选择器展示」，要写清「做什么 + 何时用」。
+const DESCRIPTION = 'Foo 大师：……当用户咨询……时使用。只做建议，不做……'
+
+const CANDIDATE: SkillCandidate = {
+  name: 'foo-master',
+  description: DESCRIPTION,
+  invocation: INVOCATION,
+  provider: PROVIDER_NAME,
+  source: 'bundled',
+  rank: BUNDLED_SKILL_RANK,
+  locator: SKILL_BODY_URL,
+}
+
+const provider: SkillProvider = {
+  name: PROVIDER_NAME,
+  list: () =&gt; Promise.resolve([CANDIDATE]),
+  async get(_candidate): Promise&lt;SkillDefinition&gt; {
+    return {
+      name: CANDIDATE.name,
+      description: CANDIDATE.description,
+      invocation: CANDIDATE.invocation,
+      provider: CANDIDATE.provider,
+      source: CANDIDATE.source,
+      content: await readFile(SKILL_BODY_URL, 'utf8'),
+    }
+  },
+}
+
+/** Cordis plugin name. */
+export const name = 'skill-foo'
+/** Service required by the bundled provider. */
+export const inject = ['skills']
+
+/** Register the bundled `foo-master` provider on `ctx.skills`. */
+export function apply(ctx: Context): void {
+  ctx.skills.registerProvider(() =&gt; provider)
+}</code></pre>
+
+<h4>如果技能正文引用了图片等相对资源</h4>
+<p>需额外提供 <code>resourceBase</code>（参考 <code>skill-badge</code>），让加载器能解析正文里的相对路径：</p>
+<pre><code>import { fileURLToPath } from 'node:url'
+const RESOURCE_BASE = {
+  kind: 'directory',
+  path: fileURLToPath(new URL('../assets/', import.meta.url)),
+} as const
+// 在 CANDIDATE 和 get() 返回值里都带上 resourceBase: RESOURCE_BASE</code></pre>
+
+<div class="note">
+  <b>要点</b>：
+  <ul style="margin:6px 0 0">
+    <li><code>name</code>（插件名）与 <code>PROVIDER_NAME</code>（提供者名）是两个概念：插件名对应组合行的 id 前缀，提供者名是注册表内标识。</li>
+    <li>每个导出（<code>name</code>/<code>inject</code>/<code>apply</code>）都要有简洁 JSDoc —— 仓库有 <code>verify-export-jsdoc</code> 闸门强制。</li>
+    <li>提供者在 <code>apply()</code> 里<b>同步注册</b>；正文在每次 <code>get()</code> 时读取。</li>
+  </ul>
+</div>
+</li>
+
+<!-- STEP 4 -->
+<li>
+<div class="step-head"><span class="step-num">4</span><h3>编写 package.json</h3></div>
+<span class="filetag">package.json</span>
+<pre><code>{
+  "name": "@deepseek-ai/dsh-skill-foo",
+  "description": "Bundled foo-master skill provider for DeepSeek Harness",
+  "version": "0.2.1-alpha.1",
+  "publishConfig": { "access": "public" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/skill/skill-foo"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["lib/index.js", "assets", "lib/types/**/*.d.ts"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/dsh-skill": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-skill": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
+  }
+}</code></pre>
+<div class="warn">
+  <b>易漏点</b>：<code>files</code> 数组<b>必须包含 <code>"assets"</code></b>，否则技能正文不会被打进发布产物 / ASAR，运行时会因找不到 <code>.md</code> 而加载失败。<code>version</code> 要与仓库当前版本一致（当前 <code>0.2.1-alpha.1</code>）。
+</div>
+</li>
+
+<!-- STEP 5 -->
+<li>
+<div class="step-head"><span class="step-num">5</span><h3>编写 tsconfig.json</h3></div>
+<span class="filetag">tsconfig.json</span>
+<pre><code>{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../../vendor/cosmokit" },
+    { "path": "../../../vendor/cordis" },
+    { "path": "../skill" }
+  ]
+}</code></pre>
+<p class="small">与 skill-parenting 完全一致，可直接复制。<code>references</code> 指向它编译期依赖的单元。</p>
+</li>
+
+<!-- STEP 6 -->
+<li>
+<div class="step-head"><span class="step-num">6</span><h3>编写单元测试</h3></div>
+<span class="filetag">tests/skill-foo.spec.ts</span>
+<p>验证三件事：<b>注册后能列出</b>、<b>能按名加载到正文</b>、<b>卸载后消失</b>。</p>
+<pre><code>import { Context } from '@deepseek-ai/cordis'
+import { describe, expect, it } from 'vitest'
+import SkillRegistry from '@deepseek-ai/dsh-skill'
+import * as SkillFoo from '@deepseek-ai/dsh-skill-foo'
+
+describe('dsh-skill-foo', () =&gt; {
+  it('registers and disposes the bundled foo-master skill', async () =&gt; {
+    const ctx = new Context()
+    await ctx.plugin(SkillRegistry)
+    const fiber = await ctx.plugin(SkillFoo)
+
+    const listed = await ctx.skills.list()
+    expect(listed).toEqual([{
+      name: 'foo-master',
+      description: expect.stringContaining('Foo 大师'),
+      invocation: { modelInvocable: true, userInvocable: true },
+      provider: 'dsh-foo',
+      source: 'bundled',
+    }])
+
+    const loaded = await ctx.skills.get('foo-master')
+    expect(loaded?.content).toContain('身份与定位')  // 断言正文里的稳定字样
+    expect(loaded?.invocation).toEqual({ modelInvocable: true, userInvocable: true })
+
+    await fiber.dispose()
+    expect(await ctx.skills.list()).toEqual([])
+  })
+})</code></pre>
+<div class="warn"><b>覆盖率闸门</b>：<code>packages/*/*/src</code> 要求逐文件 100% 覆盖（<code>pnpm run test:coverage</code>）。提供者代码要保持精简，确保 <code>list</code>/<code>get</code> 两条路径都被测到。</div>
+</li>
+
+<!-- STEP 7 -->
+<li>
+<div class="step-head"><span class="step-num">7</span><h3>编写双语 README</h3></div>
+<span class="filetag">README.md</span><span class="filetag">README.zh.md</span><span class="filetag">README.i18n.yaml</span>
+<p>每个包都要有 <code>README.md</code>（英）与 <code>README.zh.md</code>（中），带 YAML front-matter（<code>description</code> + <code>kind: "package-reference"</code>），并遵循固定的小节结构（Summary / Use this package / Understand the implementation / Model Experience / Known Limitations / Dev Note）。</p>
+<p>最省事的做法：<b>复制 <code>skill-parenting</code> 的两个 README，把 parenting 相关文字替换成你的技能</b>，保持小节标题与锚点结构不变。然后运行配对生成器写入 <code>README.i18n.yaml</code>：</p>
+<pre><code>pnpm run verify-translation-pairing --write packages/skill/skill-foo/README.md</code></pre>
+<div class="note">README 的 <b>Model Experience</b> 小节内容必须与第 9 步在 <code>verify-package-readme-model-experience.ts</code> 里登记的契约一致（预设技能固定为 <code>indirect</code>：通过 <code>dsh-tool-skill</code> 间接渲染给模型）。</div>
+</li>
+
+<!-- STEP 8 -->
+<li>
+<div class="step-head"><span class="step-num">8</span><h3>接入 base bundle（默认启用）</h3></div>
+<p>这一步决定技能是否「开箱即用」。系统预设技能挂在 <b>base bundle</b>——所有 base-backed profile（web / desktop / headless / cli）共享的核心层。</p>
+
+<h4>8a. 组合行</h4>
+<span class="filetag">packages/bundle/base/cordis.patch.yml</span>
+<p>在 skill 分组里（<code>skill</code> / <code>skill-filesystem</code> / <code>skill-badge</code> 附近）新增一行。<b>不加 <code>disabled</code> 即默认启用</b>：</p>
+<pre><code>    - id: skill-foo
+      name: '@deepseek-ai/dsh-skill-foo'</code></pre>
+<p class="small">对照：skill-badge 那行带了 <code>disabled: true</code>（默认关闭），而 skill-parenting 不带（默认开启）。按需选择。</p>
+
+<h4>8b. bundle 依赖</h4>
+<span class="filetag">packages/bundle/base/package.json</span>
+<p>在 <code>dependencies</code> 里按字母序（skill 分组）新增：</p>
+<pre><code>    "@deepseek-ai/dsh-skill-foo": "workspace:*",</code></pre>
+<div class="warn"><b>为什么两处都要改</b>：<code>cordis.patch.yml</code> 声明「组合时挂载这个插件」，<code>package.json</code> 声明「base bundle 运行时依赖这个包」。缺任一都会导致插件找不到 / 不被加载。仓库有 <code>verify-cordis-config</code> 闸门校验二者一致。</div>
+</li>
+
+<!-- STEP 9 -->
+<li>
+<div class="step-head"><span class="step-num">9</span><h3>登记 TypeScript 工程与闸门脚本</h3></div>
+
+<h4>9a. tsconfig 路径映射</h4>
+<span class="filetag">tsconfig.base.json</span>
+<p>在 <code>compilerOptions.paths</code> 的 skill 分组里新增（让源码面能解析包名到 src）：</p>
+<pre><code>      "@deepseek-ai/dsh-skill-foo": ["./packages/skill/skill-foo/src"],</code></pre>
+
+<h4>9b. tsconfig host 工程引用</h4>
+<span class="filetag">tsconfig.host.json</span>
+<p>在 <code>references</code> 里 skill 分组新增：</p>
+<pre><code>    { "path": "./packages/skill/skill-foo" },</code></pre>
+
+<h4>9c. 工作区产物约束</h4>
+<span class="filetag">scripts/check-workspace-constraints.ts</span>
+<p>在 <code>packageFileExtras</code> 里声明 <code>assets</code> 是合法额外目录（否则闸门会认为 <code>files</code> 里多了未登记产物）：</p>
+<pre><code>  '@deepseek-ai/dsh-skill-foo': ['assets'],</code></pre>
+
+<h4>9d. 文档图生成器</h4>
+<span class="filetag">scripts/gen-doc-graphs.ts</span>
+<p>把新包加入 skill seam 的 <code>implementations</code> 列表（保持字母序）：</p>
+<pre><code>    implementations: ['sandbox-windows-acl', 'skill-badge', 'skill-filesystem', 'skill-foo', 'skill-office', 'skill-parenting'],</code></pre>
+
+<h4>9e. README Model Experience 契约</h4>
+<span class="filetag">scripts/verify-package-readme-model-experience.ts</span>
+<p>在 <code>SENTENCE_MODEL_EXPERIENCE</code> 的 skill 分组新增一行：</p>
+<pre><code>  'packages/skill/skill-foo': { kind: 'indirect', reason: 'The bundled foo provider delegates model rendering to dsh-tool-skill.' },</code></pre>
+
+<h4>9f. Python SDK exe 资产清单</h4>
+<span class="filetag">scripts/build-exe-for-python-sdk.ts</span>
+<p>在 <code>ASSET_GLOBS</code> 里新增，确保单文件 exe 打包时带上技能正文：</p>
+<pre><code>  // skill-foo resolves its Markdown body through import.meta.url.
+  'node_modules/@deepseek-ai/dsh-skill-foo/assets/**/*',</code></pre>
+<p class="small">同时在 <code>scripts/build-exe-for-python-sdk-assets.spec.ts</code> 里补一条断言，验证该 glob 出现在产物清单中（对照 skill-parenting 的写法）。</p>
+</li>
+
+<!-- STEP 10 -->
+<li>
+<div class="step-head"><span class="step-num">10</span><h3>安装依赖并重新生成文档</h3></div>
+<pre><code># 1) 更新锁文件（workspace glob 已自动纳入新包）
+pnpm install
+
+# 2) 重新生成受影响的文档图（module-graph / capability-seams 等）
+pnpm run gen-doc-graphs        # 若脚本名不同，见 package.json scripts
+# 或按仓库惯例：
+pnpm run doc-sync</code></pre>
+<p class="small"><code>docs/module-graph.md</code>、<code>docs/module-graph.zh.md</code>、<code>docs/capability-seams.md</code>、<code>docs/capability-seams.zh.md</code> 会被生成器自动重写，把新包纳入 skill 子图。<b>不要手改这些生成文件</b>。</p>
+</li>
+
+</ol>
+
+<!-- ============ 5. 闸门 ============ -->
+<h2 id="gates">5. 质量闸门与验证</h2>
+<p>改完后按「就近验证」原则跑以下命令（无需全量）：</p>
+<table>
+  <tr><th>命令</th><th>验证内容</th></tr>
+  <tr><td><code>pnpm run typecheck</code></td><td>全仓类型通过（含新包 src 与 tsconfig 引用）</td></tr>
+  <tr><td><code>pnpm --filter @deepseek-ai/dsh-skill-foo run test</code></td><td>新包单测通过</td></tr>
+  <tr><td><code>pnpm run test:coverage</code></td><td>CI 覆盖率闸门（新包 src 逐文件 100%）</td></tr>
+  <tr><td><code>pnpm run lint</code></td><td>oxlint 通过</td></tr>
+  <tr><td><code>pnpm run doc-sync</code> / <code>pnpm run test:docs</code></td><td>文档闸门：module-graph / capability-seams up-to-date、README 配对、Model Experience 契约</td></tr>
+  <tr><td><code>pnpm run hygiene</code></td><td>publint + 工作区/包/依赖一致性（含 cordis 组合校验）</td></tr>
+</table>
+
+<h3>5.1 手动冒烟：技能是否真的可用</h3>
+<p>用源码启动跑一个任务，确认技能出现在目录里（需要 <code>DEEPSEEK_API_KEY</code>）：</p>
+<pre><code># headless 跑一个会命中技能描述的请求
+pnpm dsh --profile headless "请就用 foo 技能给我一个示范"</code></pre>
+<p>或从源码启动 Web / Desktop，在 <span class="kbd">/</span> 技能选择器里确认能看到并选中该技能。</p>
+
+<!-- ============ 6. 清单 ============ -->
+<h2 id="checklist">6. 完整检查清单</h2>
+<div class="card">
+<ul class="checklist">
+  <li>新建 <code>packages/skill/skill-&lt;name&gt;/</code> 目录</li>
+  <li><code>assets/&lt;skill&gt;.md</code> 技能正文已编写</li>
+  <li><code>src/index.ts</code> 实现 provider，导出 <code>name</code>/<code>inject</code>/<code>apply</code> 且各有 JSDoc</li>
+  <li>技能 <code>name</code> 为合法 kebab-case；<code>source: 'bundled'</code>；<code>rank: BUNDLED_SKILL_RANK</code></li>
+  <li><code>package.json</code> 的 <code>files</code> 含 <code>"assets"</code>；version 与仓库一致；peer/dev 依赖齐全</li>
+  <li><code>tsconfig.json</code> references 指向 cosmokit / cordis / skill</li>
+  <li><code>tests/*.spec.ts</code> 覆盖 注册→列出→加载→卸载 全路径</li>
+  <li><code>README.md</code> + <code>README.zh.md</code> 双语，小节结构完整；已生成 <code>README.i18n.yaml</code></li>
+  <li><code>packages/bundle/base/cordis.patch.yml</code> 新增组合行（默认启用则不加 <code>disabled</code>）</li>
+  <li><code>packages/bundle/base/package.json</code> dependencies 新增 <code>workspace:*</code></li>
+  <li><code>tsconfig.base.json</code> paths 新增映射</li>
+  <li><code>tsconfig.host.json</code> references 新增工程</li>
+  <li><code>scripts/check-workspace-constraints.ts</code> packageFileExtras 声明 <code>assets</code></li>
+  <li><code>scripts/gen-doc-graphs.ts</code> skill implementations 加入新包</li>
+  <li><code>scripts/verify-package-readme-model-experience.ts</code> 登记 <code>indirect</code> 契约</li>
+  <li><code>scripts/build-exe-for-python-sdk.ts</code> ASSET_GLOBS + 对应 spec 断言</li>
+  <li><code>pnpm install</code> 更新 <code>pnpm-lock.yaml</code></li>
+  <li>重新生成 <code>docs/module-graph.*</code> / <code>docs/capability-seams.*</code></li>
+  <li>typecheck / test / coverage / lint / doc-sync / hygiene 全绿</li>
+  <li>手动冒烟：技能出现在 <span class="kbd">/</span> 选择器或模型能自动路由</li>
+</ul>
+</div>
+
+<!-- ============ 7. 坑 ============ -->
+<h2 id="pitfalls">7. 常见坑与注意事项</h2>
+
+<div class="warn">
+  <b>坑 1 · 正文丢失</b>：<code>package.json</code> 的 <code>files</code> 忘记加 <code>"assets"</code>，或 Python SDK 的 <code>ASSET_GLOBS</code> 没登记，会导致技能在<b>打包产物</b>里找不到正文（源码跑正常、装完崩）。这类问题在开发期不易发现，务必两处都改。
+</div>
+
+<div class="warn">
+  <b>坑 2 · 只改一处装配</b>：只加了 <code>cordis.patch.yml</code> 组合行却没加 <code>base/package.json</code> 依赖（或反之），会导致插件解析失败或不被加载。<code>verify-cordis-config</code> 会拦，但先自查更快。
+</div>
+
+<div class="warn">
+  <b>坑 3 · 手改生成文件</b>：<code>docs/module-graph.*</code>、<code>docs/capability-seams.*</code> 是生成器产物。手改会在 <code>doc-sync</code> 时被覆盖或判为 not-up-to-date。正确做法是改 <code>gen-doc-graphs.ts</code> 后重新生成。
+</div>
+
+<div class="note">
+  <b>关于「默认启用」与「可选 bundle」的区别</b>：本指南的预设技能直接挂在 <b>base bundle</b>，属于核心层默认启用。skill-parenting 提交里还引入了另一套机制（<code>OPTIONAL_BUNDLES</code> + <code>DEFAULT_ENABLED_OFFICIAL_BUNDLES</code>，位于 <code>packages/boot/app-boot/src/profile.ts</code>），那是给「独立可选产品 bundle」（如 dsh-market）用的——它更重、涉及插件管理器 Official 分组。<b>普通的系统预设技能不需要动 profile.ts</b>，挂 base bundle 即可。
+</div>
+
+<div class="note">
+  <b>关于外部 npm 依赖</b>：skill-parenting 是纯内置包，不引入任何外部 npm 依赖。若你的技能需要外部依赖（像 dsh-market 依赖 <code>dshmarket</code>），要额外注意 pnpm 供应链策略（<code>minimumReleaseAge</code>）与 peer 依赖对锁文件/打包收集器的影响——这属于更复杂的场景，建议优先保持技能「零外部依赖 + 纯 Markdown 正文」的最简形态。
+</div>
+
+<div class="tip">
+  <b>最佳实践</b>：直接以 <code>packages/skill/skill-parenting/</code> 为模板整目录复制，改名 + 改正文 + 改描述，再按第 8~10 步接线。这是当前仓库里最精简、最标准的预设技能范例。
+</div>
+
+<!-- ============ 8. 速查 ============ -->
+<h2 id="ref">8. 契约速查表</h2>
+
+<h3>8.1 Cordis 插件导出（src/index.ts）</h3>
+<table>
+  <tr><th>导出</th><th>类型</th><th>含义</th></tr>
+  <tr><td><code>name</code></td><td><code>string</code></td><td>Cordis 插件名，如 <code>'skill-foo'</code></td></tr>
+  <tr><td><code>inject</code></td><td><code>string[]</code></td><td>依赖的服务，预设技能固定为 <code>['skills']</code></td></tr>
+  <tr><td><code>apply</code></td><td><code>(ctx: Context) =&gt; void</code></td><td>注册入口，调用 <code>ctx.skills.registerProvider(() =&gt; provider)</code></td></tr>
+</table>
+
+<h3>8.2 SkillCandidate 字段</h3>
+<table>
+  <tr><th>字段</th><th>必填</th><th>预设技能取值</th></tr>
+  <tr><td><code>name</code></td><td>✓</td><td>kebab-case 技能名，如 <code>'foo-master'</code></td></tr>
+  <tr><td><code>description</code></td><td>✓</td><td>路由描述（做什么 + 何时用）</td></tr>
+  <tr><td><code>invocation</code></td><td>✓</td><td><code>{ modelInvocable: true, userInvocable: true }</code></td></tr>
+  <tr><td><code>provider</code></td><td>✓</td><td>提供者名，如 <code>'dsh-foo'</code></td></tr>
+  <tr><td><code>source</code></td><td>✓</td><td><code>'bundled'</code></td></tr>
+  <tr><td><code>rank</code></td><td>✓</td><td><code>BUNDLED_SKILL_RANK</code>（600）</td></tr>
+  <tr><td><code>locator</code></td><td>✓</td><td>提供者私有句柄，通常传正文 URL</td></tr>
+  <tr><td><code>resourceBase</code></td><td>可选</td><td>正文含相对资源时才需要</td></tr>
+</table>
+
+<h3>8.3 关键路径速记</h3>
+<table>
+  <tr><th>用途</th><th>路径</th></tr>
+  <tr><td>技能类型定义</td><td><code>packages/skill/skill/src/index.ts</code></td></tr>
+  <tr><td>最简范例包</td><td><code>packages/skill/skill-parenting/</code></td></tr>
+  <tr><td>带资源范例包</td><td><code>packages/skill/skill-badge/</code></td></tr>
+  <tr><td>base bundle 组合</td><td><code>packages/bundle/base/cordis.patch.yml</code></td></tr>
+  <tr><td>技能子系统文档</td><td><code>docs/subsystems/skills.md</code></td></tr>
+  <tr><td>能力接缝文档</td><td><code>docs/capability-seams.md</code></td></tr>
+</table>
+
+<footer>
+  <p>本文档基于 DeepSeek Harness 提交 <code>aabba732c3</code>（新增 <code>skill-parenting</code>）的真实代码变动整理，对比基线为 <code>master</code>。</p>
+  <p>生成位置：项目根目录 <code>how-to-add-preset-skill.html</code> · 如需更新，请以仓库当前源码为准。</p>
+</footer>
+
+</div>
+</body>
+</html>

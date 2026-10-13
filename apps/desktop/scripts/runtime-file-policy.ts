@@ -1,9 +1,9 @@
 /** Desktop-only omissions from already installed production npm packages. */
 
 /**
- * Identify build and diagnostic files omitted from the immutable Desktop runtime.
- * Unrecognized assets and target runtime binaries are retained. Paths name the copied
- * node_modules tree, including nested package containers.
+ * Identify build, diagnostic, and version-control placeholder files omitted from the immutable
+ * Desktop runtime. Unrecognized assets and target runtime binaries are retained. Paths name the
+ * copied node_modules tree, including nested package containers.
  * @param path - Path relative to the production node_modules directory.
  * @param target - Platform and architecture of the Electron Node runtime.
  * @param officeEngine - Engine selected from the installed kit manifest.
@@ -17,6 +17,8 @@ export function desktopRuntimeFileExclusion(
     return 'package-manager metadata'
   }
   const file = parts.at(-1) ?? ''
+  // electron-builder omits `.gitkeep` from the ASAR, so the sealed inventory must drop it too.
+  if (file === '.gitkeep') return 'Git directory placeholder'
   if (/\.(?:[cm]?[jt]s|css)\.map$/u.test(file)) return 'source map'
   if (/\.d\.[cm]?ts$/u.test(file)) return 'TypeScript declaration'
   if (/\.tsbuildinfo$/u.test(file)) return 'TypeScript build cache'
